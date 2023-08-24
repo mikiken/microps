@@ -1,12 +1,10 @@
-#include "util.h"
 #include "test.h"
+#include "util.h"
 
-int
-main(void)
-{
-    debugf("Hello, World!");
+int main(void) {
+  debugf("Hello, World!");
 
-    debugdump(test_data, sizeof(test_data));
+  debugdump(test_data, sizeof(test_data));
 
-    return 0;
+  return 0;
 }
