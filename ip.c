@@ -55,8 +55,7 @@ char *ip_addr_ntop(ip_addr_t n, char *p, size_t size) {
   return p;
 }
 
-static void ip_dump(const uint8_t *data, size_t len) {
-}
+static void ip_dump(const uint8_t *data, size_t len) {}
 
 static void ip_input(const uint8_t *data, size_t len, struct net_device *dev) {}
 
