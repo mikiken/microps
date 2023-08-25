@@ -1,6 +1,5 @@
 #include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "icmp.h"
 #include "ip.h"
