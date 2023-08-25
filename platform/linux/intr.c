@@ -5,6 +5,7 @@
 
 #include "platform.h"
 
+#include "net.h"
 #include "util.h"
 
 struct irq_entry {
