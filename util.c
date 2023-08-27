@@ -219,6 +219,7 @@ uint32_t ntoh32(uint32_t n) {
  * Checksum
  */
 
+// calculate the one's complement of the one's complement sum of every 16 bits of data
 uint16_t cksum16(uint16_t *addr, uint16_t count, uint32_t init) {
   uint32_t sum;
 
