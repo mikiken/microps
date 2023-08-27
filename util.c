@@ -170,8 +170,7 @@ static uint16_t byteswap16(uint16_t v) {
   return (v & 0x00ff) << 8 | (v & 0xff00) >> 8;
 }
 
-static uint32_t
-byteswap32(uint32_t v) {
+static uint32_t byteswap32(uint32_t v) {
   return (v & 0x000000ff) << 24 | (v & 0x0000ff00) << 8 | (v & 0x00ff0000) >> 8 | (v & 0xff000000) >> 24;
 }
 
