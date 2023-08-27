@@ -77,6 +77,7 @@ void hexdump(FILE *fp, const void *data, size_t size) {
  * Queue
  */
 
+// each entry added to one queue
 struct queue_entry {
   struct queue_entry *next;
   void *data;
@@ -104,6 +105,7 @@ void *queue_push(struct queue_head *queue, void *data) {
     queue->tail->next = entry;
   }
   queue->tail = entry;
+  // if queue is empty
   if (!queue->head) {
     queue->head = entry;
   }
@@ -115,11 +117,13 @@ void *queue_pop(struct queue_head *queue) {
   struct queue_entry *entry;
   void *data;
 
+  // if queue is NULL or empty
   if (!queue || !queue->head) {
     return NULL;
   }
   entry = queue->head;
   queue->head = entry->next;
+  // if the entry popped is the last one
   if (!queue->head) {
     queue->tail = NULL;
   }
@@ -129,6 +133,7 @@ void *queue_pop(struct queue_head *queue) {
   return data;
 }
 
+// return queue head without deleting it
 void *queue_peek(struct queue_head *queue) {
   if (!queue || !queue->head) {
     return NULL;
@@ -136,6 +141,7 @@ void *queue_peek(struct queue_head *queue) {
   return queue->head->data;
 }
 
+// apply `func` to each queue entry
 void queue_foreach(struct queue_head *queue, void (*func)(void *arg, void *data), void *arg) {
   struct queue_entry *entry;
 
@@ -162,18 +168,22 @@ static int endian;
 
 static int byteorder(void) {
   uint32_t x = 0x00000001;
-
+  // when the last 1 byte of 1 as uint32_t is taken out,
+  // 0x01 is stored for little-endian and 0x00 for big-endian
   return *(uint8_t *)&x ? __LITTLE_ENDIAN : __BIG_ENDIAN;
 }
 
+// reverse the byte order of `uint16_t` integer
 static uint16_t byteswap16(uint16_t v) {
   return (v & 0x00ff) << 8 | (v & 0xff00) >> 8;
 }
 
+// reverse the byte order of `uint32_t` integer
 static uint32_t byteswap32(uint32_t v) {
   return (v & 0x000000ff) << 24 | (v & 0x0000ff00) << 8 | (v & 0x00ff0000) >> 8 | (v & 0xff000000) >> 24;
 }
 
+// convert `uint16_t` integer from host byte order to network byte order
 uint16_t hton16(uint16_t h) {
   if (!endian) {
     endian = byteorder();
@@ -181,6 +191,7 @@ uint16_t hton16(uint16_t h) {
   return endian == __LITTLE_ENDIAN ? byteswap16(h) : h;
 }
 
+// convert `uint16_t` integer from network byte order to host byte order
 uint16_t ntoh16(uint16_t n) {
   if (!endian) {
     endian = byteorder();
@@ -188,6 +199,7 @@ uint16_t ntoh16(uint16_t n) {
   return endian == __LITTLE_ENDIAN ? byteswap16(n) : n;
 }
 
+// convert `uint32_t` integer from host byte order to network byte order
 uint32_t hton32(uint32_t h) {
   if (!endian) {
     endian = byteorder();
@@ -195,6 +207,7 @@ uint32_t hton32(uint32_t h) {
   return endian == __LITTLE_ENDIAN ? byteswap32(h) : h;
 }
 
+// convert `uint32_t` integer from network byte order to host byte order
 uint32_t ntoh32(uint32_t n) {
   if (!endian) {
     endian = byteorder();

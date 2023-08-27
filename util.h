@@ -72,6 +72,7 @@ extern void hexdump(FILE *fp, const void *data, size_t size);
 
 struct queue_entry;
 
+// struct of the queue itself
 struct queue_head {
   struct queue_entry *head;
   struct queue_entry *tail;
