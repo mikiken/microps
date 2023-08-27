@@ -42,7 +42,7 @@ int net_device_register(struct net_device *dev) {
   static unsigned int index = 0;
 
   dev->index = index++;
-  snprintf(dev->name, sizeof(dev->name), "net%d", dev->index); // デバイス名を生成 (net0, net1, net2, ...)
+  snprintf(dev->name, sizeof(dev->name), "net%d", dev->index); // generate device name (net0, net1, net2, ...)
   dev->next = devices;
   devices = dev;
   infof("registered, dev=%s, type=0x%04x", dev->name, dev->type);
