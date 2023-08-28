@@ -1,7 +1,9 @@
+#include <errno.h>
 #include <pthread.h>
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include "platform.h"
 
@@ -57,6 +59,8 @@ int intr_request_irq(unsigned int irq, int (*handler)(unsigned int irq, void *de
 int intr_raise_irq(unsigned int irq) {
   return pthread_kill(tid, (int)irq);
 }
+
+static int intr_timer_setup(struct itimerspec *interval) {}
 
 static void *intr_thread(void *arg) {
   int terminate = 0, sig, err;
