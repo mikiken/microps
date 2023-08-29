@@ -177,6 +177,7 @@ static void udp_input(const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t 
   }
   entry = memory_alloc(sizeof(*entry) + len - sizeof(*hdr));
   if (!entry) {
+    mutex_unlock(&mutex);
     errorf("memory_alloc() failure");
     return;
   }
@@ -286,7 +287,7 @@ int udp_bind(int id, struct ip_endpoint *local) {
   }
   exist = udp_pcb_select(local->addr, local->port);
   if (exist) {
-    errorf("already in use, id=%d,want=%s, exist=%s",
+    errorf("already in use, id=%d, want=%s, exist=%s",
            id, ip_endpoint_ntop(local, ep1, sizeof(ep1)), ip_endpoint_ntop(&exist->local, ep2, sizeof(ep2)));
     mutex_unlock(&mutex);
     return -1;
@@ -349,7 +350,7 @@ ssize_t udp_recvfrom(int id, uint8_t *buf, size_t size, struct ip_endpoint *fore
   mutex_lock(&mutex);
   pcb = udp_pcb_get(id);
   if (!pcb) {
-    errorf("pcb not found. id=%d", id);
+    errorf("pcb not found, id=%d", id);
     mutex_unlock(&mutex);
     return -1;
   }
