@@ -212,7 +212,7 @@ ssize_t udp_output(struct ip_endpoint *src, struct ip_endpoint *dst, const uint8
   hdr->len = hton16(total);
   memcpy(hdr + 1, data, len);
   pseudo.src = src->addr;
-  pseudo.dst = src->addr;
+  pseudo.dst = dst->addr;
   pseudo.zero = 0;
   pseudo.protocol = IP_PROTOCOL_UDP;
   pseudo.len = hton16(total);
