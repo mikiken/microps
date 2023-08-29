@@ -1,3 +1,4 @@
+#include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -230,6 +231,8 @@ ssize_t udp_output(struct ip_endpoint *src, struct ip_endpoint *dst, const uint8
   }
   return len;
 }
+
+static void event_handler(void *arg) {}
 
 int udp_init(void) {
   if (ip_protocol_register(IP_PROTOCOL_UDP, udp_input) == -1) {
