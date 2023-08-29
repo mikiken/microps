@@ -17,6 +17,10 @@
 #define UDP_PCB_STATE_OPEN 1
 #define UDP_PCB_STATE_CLOSING 2
 
+/* see https://tools.ietf.org/html/rfc6335 */
+#define UDP_SOURCE_PORT_MIN 49152
+#define UDP_SOURCE_PORT_MAX 65535
+
 struct pseudo_hdr {
   uint32_t src;
   uint32_t dst;
@@ -287,3 +291,7 @@ int udp_bind(int id, struct ip_endpoint *local) {
   mutex_unlock(&mutex);
   return 0;
 }
+
+ssize_t udp_sendto(int id, uint8_t *data, size_t len, struct ip_endpoint *foreign) {}
+
+ssize_t udp_recvfrom(int id, uint8_t *buf, size_t size, struct ip_endpoint *foreign) {}
