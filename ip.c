@@ -32,12 +32,21 @@ struct ip_protocol {
   void (*handler)(const uint8_t *data, size_t len, ip_addr_t src, ip_addr_t dst, struct ip_iface *iface);
 };
 
+struct ip_route {
+  struct ip_route *next;
+  ip_addr_t network;
+  ip_addr_t netmask;
+  ip_addr_t nexthop;
+  struct ip_iface *iface;
+};
+
 const ip_addr_t IP_ADDR_ANY = 0x00000000;       /* 0.0.0.0 */
 const ip_addr_t IP_ADDR_BROADCAST = 0xffffffff; /* 255.255.255.255 */
 
 /* NOTE: if you want to add/delete the entries after net_run(), you need to protect these lists with a mutex. */
 static struct ip_iface *ifaces;
 static struct ip_protocol *protocols;
+static struct ip_route *routes;
 
 int ip_addr_pton(const char *p, ip_addr_t *n) {
   char *sp, *ep;
@@ -98,6 +107,16 @@ static void ip_dump(const uint8_t *data, size_t len) {
 #endif
   funlockfile(stderr);
 }
+
+/* NOTE: must not be called after net_run() */
+static struct ip_route *ip_route_add(ip_addr_t network, ip_addr_t netmask, ip_addr_t nexthop, struct ip_iface *iface) {}
+
+static struct ip_route *ip_route_lookup(ip_addr_t dst) {}
+
+/* NOTE: must not be called after net_run() */
+int ip_route_set_default_gateway(struct ip_iface *iface, const char *gateway) {}
+
+struct ip_iface *ip_route_get_iface(ip_addr_t dst) {}
 
 struct ip_iface *ip_iface_alloc(const char *unicast, const char *netmask) {
   struct ip_iface *iface;
@@ -299,17 +318,6 @@ ssize_t ip_output(uint8_t protocol, const uint8_t *data, size_t len, ip_addr_t s
   if (src == IP_ADDR_ANY) {
     errorf("ip routing does not implement");
     return -1;
-  }
-  else { /* NOTE: I'll rewrite this block later. */
-    iface = ip_iface_select(src);
-    if (!iface) {
-      errorf("iface not found, src=%s", ip_addr_ntop(src, addr, sizeof(addr)));
-      return -1;
-    }
-    if ((dst & iface->netmask) != (iface->unicast & iface->netmask) && src != IP_ADDR_BROADCAST) {
-      errorf("not reached, dst=%s", ip_addr_ntop(dst, addr, sizeof(addr)));
-      return -1;
-    }
   }
   if (NET_IFACE(iface)->dev->mtu < IP_HDR_SIZE_MIN + len) {
     errorf("too long, dev=%s, mtu=%u < %zu", NET_IFACE(iface)->dev->name, NET_IFACE(iface)->dev->mtu, IP_HDR_SIZE_MIN + len);
