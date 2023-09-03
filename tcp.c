@@ -453,6 +453,10 @@ static void tcp_segment_arrives(struct tcp_segment_info *seg, uint8_t flags, uin
   /*
      * Otherwise
      */
+
+  /*
+     * 1st check sequence number
+     */
   switch (pcb->state) {
     case TCP_PCB_STATE_SYN_RECEIVED:
     case TCP_PCB_STATE_ESTABLISHED:
@@ -495,10 +499,6 @@ static void tcp_segment_arrives(struct tcp_segment_info *seg, uint8_t flags, uin
        * numbers may be held for later processing.
        */
   }
-  /*
-     * 1st check sequence number
-     */
-
   /*
      * 2nd check the RST bit
      */
